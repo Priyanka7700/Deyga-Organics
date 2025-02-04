@@ -1,19 +1,26 @@
 package pagepkg;
 
+import java.awt.Window;
 import java.time.Duration;
+import java.util.ArrayList;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import basepkg.DeygaBase;
 
 public class DeygaMethods extends DeygaBase {
 
-WebDriver driver;
+
+	WebDriver driver;
+	WebDriverWait wait;
 	
 	
 	//SIGN IN
@@ -43,9 +50,9 @@ WebDriver driver;
 	WebElement num;
 	@FindBy(name = "add")
 	WebElement addtocart1;
-	@FindBy(xpath  = "//button[@class='drawer__close']")
+	@FindBy(xpath = "//*[@id=\"CartDrawer\"]/div[2]/div[2]/button")
 	WebElement crossbtn1;
-	@FindBy(xpath = "/html/body/nav/ol/li[1]/a/span[1]")
+	@FindBy(xpath = "//*[@id=\"shopify-section-sections--17096095989954__header\"]/sticky-header/header/h1/a/div[1]")
 	WebElement homebtn;
 	
 	//MENU SELECTION
@@ -79,15 +86,15 @@ WebDriver driver;
 	WebElement bulletswiper;
 
 	//REMOVEFROMCART
-	@FindBy(xpath = "//*[@id=\"cart-icon-bubble\"]/svg")
+	@FindBy(xpath = "//*[@id=\"cart-icon-bubble\"]/div")
 	WebElement carticon;
 	@FindBy(xpath = "//*[@id=\"Remove-1\"]/a")
 	WebElement remove;
 	
 	//CHECKOUT
-	@FindBy(xpath = "//*[@id=\"main-cart-footer\"]/div/div[1]/div/div[2]/div/button")
+	@FindBy(xpath = "//*[@id=\"CartDrawer\"]/div[2]/div[4]/div[2]/div/button")
 	WebElement checkoutbtn;
-	@FindBy(xpath = "/html/body/div/div/header/div/button/div")
+	@FindBy(xpath = "/html/body/div/div/header/div/button/div/span")
 	WebElement crossbtn4;
 	@FindBy(xpath = "/html/body/div/div[2]/div/div[2]/ul/label[8]/label")
 	WebElement reason;
@@ -115,7 +122,8 @@ WebDriver driver;
 	
 	public void SearchField() throws InterruptedException
 	{
-		String parentwindow=driver.getWindowHandle();
+		
+		
 		Actions act=new Actions(driver);
 		search.sendKeys("lipbalm");
 		act.keyDown(Keys.ENTER);
@@ -124,10 +132,33 @@ WebDriver driver;
 		num.click();
 		addtocart1.click();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+		act.moveToElement(crossbtn1);
+		act.perform();
 		crossbtn1.click();
+		homebtn.click();	
+	}
+	
+	public void Checkout() throws InterruptedException
+	{
 		
-		driver.navigate().back();
-		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+		Actions act=new Actions(driver);
+		act.moveToElement(carticon);
+		carticon.click();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+		act.scrollToElement(checkoutbtn);
+		act.moveToElement(checkoutbtn);
+		act.perform();
+		checkoutbtn.click();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+//		ArrayList<String> windows=new ArrayList<String>(driver.getWindowHandles());
+//		driver.switchTo().window(windows.get(0));
+    	act.scrollToElement(crossbtn4);
+		act.moveToElement(crossbtn4);
+		act.perform();
+		crossbtn4.click();
+		reason.click();
+		submit.click();
 	}
 	
 }
