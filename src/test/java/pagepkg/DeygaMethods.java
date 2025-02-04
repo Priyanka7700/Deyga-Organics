@@ -3,6 +3,7 @@ package pagepkg;
 import java.awt.Window;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -150,15 +151,14 @@ public class DeygaMethods extends DeygaBase {
 		act.moveToElement(checkoutbtn);
 		act.perform();
 		checkoutbtn.click();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 //		ArrayList<String> windows=new ArrayList<String>(driver.getWindowHandles());
 //		driver.switchTo().window(windows.get(0));
-    	act.scrollToElement(crossbtn4);
-		act.moveToElement(crossbtn4);
-		act.perform();
-		crossbtn4.click();
-		reason.click();
-		submit.click();
+//		act.moveToElement(crossbtn4);
+//		act.perform();
+//		crossbtn4.click();
+//		reason.click();
+//		submit.click();
 	}
 	
 }
