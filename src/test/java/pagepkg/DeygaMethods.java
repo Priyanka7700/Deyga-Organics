@@ -7,12 +7,14 @@ import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import basepkg.DeygaBase;
@@ -21,7 +23,7 @@ public class DeygaMethods extends DeygaBase {
 
 
 	WebDriver driver;
-	WebDriverWait wait;
+	FluentWait<WebDriver> wait;
 	
 	
 	//SIGN IN
@@ -97,29 +99,53 @@ public class DeygaMethods extends DeygaBase {
 	WebElement checkoutbtn;
 	@FindBy(xpath = "/html/body/div/div/header/div/button/div/span")
 	WebElement crossbtn4;
-	@FindBy(xpath = "/html/body/div/div[2]/div/div[2]/ul/label[8]/label")
+	@FindBy(xpath = "/html/body/div/div[2]/div/div[2]/ul/label[3]/label")
 	WebElement reason;
 	@FindBy(xpath = "/html/body/div/div[2]/div/div[2]/div/button[1]")
-	WebElement submit;	
+	WebElement submit;
+	@FindBy(xpath="//iframe[@id='gokwik-iframe']")
+	WebElement checkOutFrame;
+
 	
 	public DeygaMethods(WebDriver driver)
 	{
 		this.driver=driver;
 		PageFactory.initElements(driver, this);
+		wait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(10))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(NoSuchElementException.class);
 		
 		
 	}
 	
 //	public void CreateAccount(String test, String automation, String mailid, String password)
 //	{
-//		signin.click();
-//		createone.click();
+//		
 //		fname.sendKeys("test");
 //		lname.sendKeys("automation");
 //		email.sendKeys("testingautomation350@gmail.com");
 //		pswd.sendKeys("Testing@00");
 //		register.click();
 //	}
+	public void RegistratioPage()
+	{
+		signin.click();
+		createone.click();
+	}
+	
+	public void CreateAccount(String firstname, String lastname, String mail, String pass) {
+			
+		fname.clear();
+		fname.sendKeys(firstname);
+		lname.clear();
+		lname.sendKeys(lastname);
+		email.clear();
+		email.sendKeys(mail);
+		pswd.clear();
+		pswd.sendKeys(pass);
+		register.click();
+	}
 	
 	public void SearchField() throws InterruptedException
 	{
@@ -132,7 +158,8 @@ public class DeygaMethods extends DeygaBase {
 		lipbalm.click();
 		num.click();
 		addtocart1.click();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+		//driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+	    wait.until(d -> crossbtn1.isDisplayed());
 		act.moveToElement(crossbtn1);
 		act.perform();
 		crossbtn1.click();
@@ -141,24 +168,68 @@ public class DeygaMethods extends DeygaBase {
 	
 	public void Checkout() throws InterruptedException
 	{
-		
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-		Actions act=new Actions(driver);
-		act.moveToElement(carticon);
-		carticon.click();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-		act.scrollToElement(checkoutbtn);
-		act.moveToElement(checkoutbtn);
-		act.perform();
-		checkoutbtn.click();
+		try {
 //		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+//		Actions act=new Actions(driver);
+//		act.moveToElement(carticon);
+//		carticon.click();
+//		wait.until(d -> checkOutFrame.isDisplayed());
+//      driver.switchTo().frame(checkOutFrame);
+//		wait.until(d -> checkoutbtn.isDisplayed());
+//	    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+//		act.scrollToElement(checkoutbtn);
+//		act.moveToElement(checkoutbtn);
+//		act.perform();
+//		checkoutbtn.click();
+//		
+//      	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+// 		driver.switchTo().frame(checkOutFrame);
 //		ArrayList<String> windows=new ArrayList<String>(driver.getWindowHandles());
 //		driver.switchTo().window(windows.get(0));
 //		act.moveToElement(crossbtn4);
 //		act.perform();
 //		crossbtn4.click();
+//		
+//		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+//		act.moveToElement(crossbtn4);
+//		act.perform();
+//		crossbtn4.click();
 //		reason.click();
 //		submit.click();
+		
+		 Actions act = new Actions(driver);
+         wait.until(ExpectedConditions.visibilityOf(carticon));
+         act.moveToElement(carticon);
+         act.perform();
+         carticon.click();
+         
+         wait.until(ExpectedConditions.visibilityOf(checkoutbtn));
+         act.scrollToElement(checkoutbtn);
+         act.moveToElement(checkoutbtn);
+         act.perform();
+         checkoutbtn.click();
+         
+         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(checkOutFrame));
+         
+         wait.until(ExpectedConditions.elementToBeClickable(crossbtn4));
+         crossbtn4.click();
+         
+         wait.until(ExpectedConditions.elementToBeClickable(reason));
+         act.moveToElement(reason);
+         act.perform();
+         reason.click();
+         
+         wait.until(ExpectedConditions.visibilityOf(submit));
+         act.moveToElement(submit);
+         act.perform();
+         submit.click();
+         
+         driver.switchTo().defaultContent();
+         wait.until(ExpectedConditions.elementToBeClickable(crossbtn1));
+         crossbtn1.click();
+     } catch (Exception e) {
+         System.err.println("Exception occurred during checkout: " + e.getMessage());
+     }
 	}
 	
 }
